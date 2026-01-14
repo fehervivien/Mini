@@ -1,0 +1,25 @@
+Fordítás:
+cd ~/Dokumentumok/Szakdolgozat/Mini/src/main/java
+javac org/example/*.java
+
+Futtatás (hibát fog kiírni hogy nem adtál meg nevet de az jó így):
+cd ~/Dokumentumok/Szakdolgozat/Mini/src/main/java
+java org.example.MiniInterpreter
+
+A Mini nyelv fájlal futtatni:
+cd ~/Dokumentumok/Szakdolgozat/Mini/src/main/java
+java org.example.MiniInterpreter teszt.mini
+
+Mini nyelv szintaxisa if feltétellel:
+var x = 10
+
+if (x > 5) then
+  print "x nagyobb mint 5"
+  var y = 20
+endif
+
+if (x == 10) then
+  print "x pontosan 10"
+else
+  print "x nem 10"
+endif

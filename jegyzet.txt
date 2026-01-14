@@ -1,0 +1,20 @@
+- Még a teszt.mini programba mindegyik részét belerakni
+
+- Bővíteni: * vezérlési szerkezetek: for, do-while, switch-case,          function, függvény hívása
+            * változó típusa: boolean, float, var
+            * szintaktika módosítása
+
+
+Amit most tud: * Alapvető matematikai és logikai műveletek elvégzésére 
+               * Változók kezelésére és vezérlési szerkezetek használatára
+               * {}-jelek az endif helyett
+               * while ciklus
+               * for ciklus
+
+jvm kell hozzá, értelmező
+just in time bináris
+* Kód háttérrel, írással, ne képpel. Kimenet: képpel lehet
+* szintaxis változtatás, új dolog legyen benne: 1 új dolog, téma a fontos, hoy mire: diákoknak, új operátor, egyszerűsítések, praktikusság, lezárójel más lehet mint a {}-jel, fájl megnyitás
+    - 
+30 oldal képek nélkül, csak a szövegnek kell annyinak lennie
+readme fájl irása neptunba feltöltéskor
