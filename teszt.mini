@@ -1,0 +1,23 @@
+print "--- Fuggveny Teszt ---"
+
+# Definiálunk egy függvényt, ami két számot ad össze
+func osszead(a, b) {
+    eredmeny = a + b
+    return eredmeny
+}
+
+# Definiálunk egy rekurzív (önmagát hívó) függvényt a faktoriálishoz!
+func faktorialis(n) {
+    if n <= 1 {
+        return 1
+    }
+    return n * faktorialis(n - 1)
+}
+
+print "5 + 10 eredmenye: " + osszead(5, 10)
+
+print "Mennyinek a faktorialisat szamoljam ki?"
+szam = input
+eredmeny = faktorialis(szam)
+
+print szam + " faktorialisa: " + eredmeny
