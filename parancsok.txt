@@ -4,11 +4,11 @@ javac org/example/*.java
 
 Futtatás (hibát fog kiírni hogy nem adtál meg nevet de az jó így):
 cd ~/Dokumentumok/Szakdolgozat/Mini/src/main/java
-java org.example.MiniInterpreter
+java org.example.core.MiniInterpreter
 
 A Mini nyelv fájlal futtatni:
 cd ~/Dokumentumok/Szakdolgozat/Mini/src/main/java
-java org.example.MiniInterpreter teszt.mini
+java org.example.core.MiniInterpreter teszt.mini
 
 Mini nyelv szintaxisa if feltétellel:
 var x = 10

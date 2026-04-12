@@ -1,20 +1,48 @@
-- Még a teszt.mini programba mindegyik részét belerakni
+cd /src/main/java
 
-- Bővíteni: * vezérlési szerkezetek: for, do-while, switch-case,          function, függvény hívása
-            * változó típusa: boolean, float, var
-            * szintaktika módosítása
+javac org/example/exception/*.java org/example/core/*.java org/example/expression/*.java org/example/statement/*.java
+
+java org.example.core.MiniInterpreter teszt.mini
 
 
-Amit most tud: * Alapvető matematikai és logikai műveletek elvégzésére 
-               * Változók kezelésére és vezérlési szerkezetek használatára
-               * {}-jelek az endif helyett
-               * while ciklus
-               * for ciklus
 
-jvm kell hozzá, értelmező
-just in time bináris
-* Kód háttérrel, írással, ne képpel. Kimenet: képpel lehet
-* szintaxis változtatás, új dolog legyen benne: 1 új dolog, téma a fontos, hoy mire: diákoknak, új operátor, egyszerűsítések, praktikusság, lezárójel más lehet mint a {}-jel, fájl megnyitás
-    - 
-30 oldal képek nélkül, csak a szövegnek kell annyinak lennie
+ git push origin master
+
+---------------------------------------
 readme fájl irása neptunba feltöltéskor
+
+
+├── org
+│   └── example
+│       ├── core                 <-- A nyelv "motorja"
+│       │   ├── Environment.java
+│       │   ├── MiniInterpreter.java
+│       │   └── Parser.java
+│       │
+│       ├── exception            <-- A hibakezelés
+│       │   ├── MiniException.java
+│       │   └── ReturnException.java
+│       │
+│       ├── expression           <-- Kifejezések (amiknek van visszatérési értéke)
+│       │   ├── Expression.java
+│       │   ├── BinaryExpression.java
+│       │   ├── CallExpression.java
+│       │   ├── ComparisonExpression.java
+│       │   ├── InputExpression.java
+│       │   ├── LogicalExpression.java
+│       │   ├── NumberExpression.java
+│       │   ├── StringExpression.java
+│       │   └── VariableExpression.java
+│       │
+│       └── statement            <-- Utasítások / Parancsok (amik csinálnak valamit)
+│           ├── Statement.java
+│           ├── ForStatement.java
+│           ├── FunctionStatement.java
+│           ├── IfStatement.java
+│           ├── PrintStatement.java
+│           ├── ReturnStatement.java
+│           ├── TrackedStatement.java
+│           ├── VarAssignStatement.java
+│           └── WhileStatement.java
+│
+└── teszt.mini
