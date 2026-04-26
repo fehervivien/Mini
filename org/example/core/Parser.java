@@ -25,6 +25,9 @@ public class Parser {
     private List<String> tokens;
     private int currentTokenIndex;
 
+    // Jelzi, ha a sorokon átívelő komment még tart
+    private boolean inMultiLineComment = false;
+
     /* Lexikális elemző a kifejezésekhez.
      * Egy matematikai vagy logikai sort darabol fel
      * alapegységekre (tokenekre):
@@ -34,6 +37,7 @@ public class Parser {
         List<String> tokens = new ArrayList<>();
         StringBuilder currentToken = new StringBuilder();
         boolean inString = false;
+
 
         // Reguláris kifejezés az operátorok
         // és speciális elválasztók felismerésére
@@ -336,6 +340,9 @@ public class Parser {
             else if (line.startsWith("func ")) {
                 stmt = parseFunctionStatement(line);
             }
+            else if (line.startsWith("switch")) {
+                stmt = parseSwitchStatement(line);
+            }
             else {
                 stmt = parseSimpleStatement(line);
             }
@@ -516,4 +523,62 @@ public class Parser {
         currentLineIndex++;
         return new FunctionStatement(name, params, body);
     }
+
+    private Statement parseSwitchStatement(String line) {
+        // 1. A 'switch' fejléc elemzése: switch kifejezés {
+        Pattern switchPattern = Pattern.compile("^switch\\s+(.*?)\\s*\\{$");
+        Matcher matcher = switchPattern.matcher(line);
+
+        if (!matcher.matches()) {
+            throw new RuntimeException("Hibás 'switch' szintaxis: " + line + ". Várt formátum: switch kifejezés {");
+        }
+
+        String conditionString = matcher.group(1);
+        Expression condition = parseExpression(conditionString);
+
+        // 2. Az ágak gyűjtése
+        java.util.Map<Expression, Statement> cases = new java.util.LinkedHashMap<>();
+        Statement defaultBranch = null;
+
+        // Addig olvassa a sorokat, amíg el nem éri a switch végét jelző '}' jelet
+        while (currentLineIndex < lines.size()) {
+            String caseLine = lines.get(currentLineIndex).trim();
+
+            // Ha elérte a switch lezárását
+            if (caseLine.equals("}")) {
+                currentLineIndex++;
+                break;
+            }
+
+            if (caseLine.startsWith("case ")) {
+                // Case ág: case érték {
+                currentLineIndex++;
+                Pattern casePattern = Pattern.compile("^case\\s+(.*?)\\s*\\{$");
+                Matcher caseMatcher = casePattern.matcher(caseLine);
+
+                if (!caseMatcher.matches()) throw new RuntimeException("Hibás 'case' szintaxis: " + caseLine);
+
+                Expression caseValue = parseExpression(caseMatcher.group(1));
+                // Beolvassa a hozzá tartozó blokkot a lezáró '}' jelig
+                List<Statement> caseBody = parseStatementBlock("}");
+                cases.put(caseValue, new BlockStatement(caseBody));
+                currentLineIndex++;
+            }
+            else if (caseLine.startsWith("default {")) {
+                currentLineIndex++;
+                List<Statement> defaultBody = parseStatementBlock("}");
+                defaultBranch = new BlockStatement(defaultBody);
+                currentLineIndex++;
+            }
+            else if (caseLine.isEmpty()) {
+                currentLineIndex++; // Üres sorok átugrása
+            }
+            else {
+                throw new RuntimeException("Váratlan sor a switch blokkban: " + caseLine);
+            }
+        }
+
+        return new SwitchStatement(condition, cases, defaultBranch);
+    }
+
 }

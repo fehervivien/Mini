@@ -1,23 +1,117 @@
-print "--- Fuggveny Teszt ---"
+print "======================================"
+print "      MINI NYELV - bemutató        "
+print "======================================"
+print ""
 
-# Definiálunk egy függvényt, ami két számot ad össze
-func osszead(a, b) {
-    eredmeny = a + b
-    return eredmeny
+
+print "--- 1. Valtozok es Dinamikus Tipizalas ---"
+# A nyelv kepes futas kozben tipust valtani (Double -> String)
+var x = 10
+print "Az 'x' eredeti erteke (szam): " + x
+x = "Sikeres tipusvaltas!"
+print "Az 'x' uj erteke (szoveg): " + x
+print ""
+
+
+print "--- 2. Matematika es Polimorfikus Operatorok ---"
+# A '+' jel matematikat es szovegosszefuzest is vegez
+var a = 20
+var b = 5
+print "Kifejezes (20 / 5 + 10): " + (a / b + 10)
+print "Szoveg " + "osszefuzes " + 100 + "%-osan mukodik."
+print ""
+
+
+print "--- 3. Logika es Rovidzar kiertekeles (Short-circuit) ---"
+# A truthy/falsy mukodes: a 0.0 hamis, minden mas igaz.
+var feltetel = 1
+if feltetel || (10 / 0) {
+    print "A rovidzar mukodik! A (10/0) hibat meg sem probalta lefutattni."
 }
 
-# Definiálunk egy rekurzív (önmagát hívó) függvényt a faktoriálishoz!
+if a > 10 && b < 10 {
+    print "A relacios es logikai operatorok (>, <, &&) hibatlanok."
+}
+print ""
+
+
+print "--- 4. Vezerlesi Szerkezetek (While es For ciklusok) ---"
+print "Visszaszamlalas (while):"
+var i = 3
+while i > 0 {
+    print i
+    i = i - 1
+}
+
+print "Paros szamok (for):"
+# A 'for' ciklus fejlécéből kivettük a zárójeleket és a 'var'-t
+var j = 0
+for j = 2; j <= 6; j = j + 2 {
+    print j
+}
+print ""
+
+
+print "--- 5. Fuggvenyek, Hatokor (Scope) es Rekurzio ---"
+# A Call-by-value es az uj Environment letrehozasat mutatja be
 func faktorialis(n) {
     if n <= 1 {
         return 1
     }
+    # A kivetel mint vezerles (ReturnException) a hatterben dolgozik!
     return n * faktorialis(n - 1)
 }
 
-print "5 + 10 eredmenye: " + osszead(5, 10)
+print "5 faktorialisa (5!):"
+print faktorialis(5)
+print ""
 
-print "Mennyinek a faktorialisat szamoljam ki?"
-szam = input
-eredmeny = faktorialis(szam)
 
-print szam + " faktorialisa: " + eredmeny
+print "--- 6. Beepitett Standard Konyvtar ---"
+var szo = "Szakdolgozat"
+print "A '" + szo + "' szo hossza: " + length(szo)
+
+# Veletlenszam generalas 1 es 10 kozott
+var veletlen = random() * 10
+print "Veletlen szam kerekitve: " + round(veletlen)
+print ""
+
+print "Switch - case:"
+# Switch - case: Szám alapú
+jegy = 4
+
+print "Értékelés indítása..."
+switch jegy {
+    case 5 {
+        print "Kiváló"
+    }
+    case 4 {
+        print "Jó"
+    }
+    case 3 {
+        print "Közepes"
+    }
+    default {
+        print "Hanyag/Egyéb"
+    }
+}
+
+# Switch - case: Szöveg alapú
+szin = "piros"
+
+switch szin {
+    case "kek" {
+        print "Az ég kék."
+    }
+    case "piros" {
+        print "A tűz piros."
+    }
+    default {
+        print "Ismeretlen szín."
+    }
+}
+
+
+print "======================================"
+print "   A bemutató SIKERESEN LEFUTOTT      "
+print "======================================"
