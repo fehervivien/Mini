@@ -6,10 +6,26 @@ java org.example.core.MiniInterpreter teszt.mini
 
 
 
- git push origin master
+git push -f origin master
+
+github feltöltési kód: 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
 
 ---------------------------------------
 readme fájl irása neptunba feltöltéskor
+
+a teszt.mini: Változókezelés: Bemutatja a deklarációt (var) és a dinamikus típusmódosítást (amikor az x számból szöveg lesz).
+
+Kifejezések hierarchiája: A (a / b + 10) sorban látszik a műveleti sorrend és a zárójelek kezelése.
+
+Polimorfizmus: A + operátor kétarcúsága (összeadás vs. összefűzés) az egyik legerősebb pontod.
+
+Vezérlési szerkezetek: Az if, a while és a for ciklus is szerepel, bizonyítva a kódblokkok ({ }) kezelését.
+
+Dinamikus hatókör (Scope): A faktorialis függvény futása alatt látszik, hogy minden hívás saját memóriaterületet (Environment) kap, különben a rekurzió "összegabalyodna".
+
+Hibakezelés alapjai: A rövidzár-kiértékelés (||) megmutatja, hogy a motorod nemcsak vakon hajtja végre a kódokat, hanem logikai döntéseket hoz a futtatás sorrendjéről is.
+
+Standard Library: A random(), round() és length() függvényekkel demonstrálod, hogy a nyelved képes együttműködni a Java beépített osztályaival (pl. Math osztály).
 
 
 ├── org
