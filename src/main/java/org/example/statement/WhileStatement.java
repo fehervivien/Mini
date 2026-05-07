@@ -34,23 +34,11 @@ public class WhileStatement implements Statement {
      */
     @Override
     public void execute(Environment env) {
-
-        /* A Mini nyelv ciklusát a gazdanyelv (Java)
-           egy végtelen ciklusával szimulálja.
-           Ezt hívják "Host language iteration mapping"-nek. */
         while (true) {
-
-            /* 1. LÉPÉS: A feltétel újraértékelése
-               Ezt az Expression.evaluate() hívást
-               minden körben meg KELL tenni, hiszen
-               a ciklusmag (body) az előző körben
-               valószínűleg megváltoztatta a változók
-               értékét */
+            /* 1. LÉPÉS: A feltétel újraértékelése */
             Object result = condition.evaluate(env);
 
-            /* 2. LÉPÉS: Szigorú típusellenőrzés:
-               A vezérlési feltételnek számnak
-               (logikai értéknek) kell lennie. */
+            /* 2. LÉPÉS: Szigorú típusellenőrzés */
             if (!(result instanceof Double)) {
                 throw new MiniException(
                         "Tipushiba: A 'while' feltetelnek szamnak (logikai erteknek) kell lennie. " +
@@ -59,19 +47,21 @@ public class WhileStatement implements Statement {
 
             double val = (Double) result;
 
-            /* 3. LÉPÉS: Kilépési feltétel (Break condition)
-               A 0.0 - hamis érték. Ha a feltétel hamis, megszakítja
-               a Java végtelen ciklust, és ezzel véget ér a Mini
-               nyelvű ciklus is. */
+            /* 3. LÉPÉS: Kilépési feltétel (0.0 = hamis) */
             if (val == 0.0) {
                 break;
             }
 
-            /* 4. LÉPÉS: A ciklusmag végrehajtása
-               Ha a feltétel igaz volt, sorban lefuttatja
-               a blokkban lévő utasításokat. */
-            for (Statement stmt : body) {
-                stmt.execute(env);
+            /* 4. LÉPÉS: A ciklusmag végrehajtása hibakezeléssel */
+            try {
+                for (Statement stmt : body) {
+                    stmt.execute(env);
+                }
+            } catch (org.example.exception.BreakException e) {
+            /* Ha a ciklusmag futása közben BreakException érkezik,
+               megszakítjuk a Java 'while(true)' ciklust is.
+               Ezzel a Mini-ciklus szabályosan véget ér. */
+                break;
             }
         }
     }
