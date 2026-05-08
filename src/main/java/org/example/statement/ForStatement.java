@@ -28,7 +28,7 @@ public class ForStatement implements Statement {
     // 4. A ciklus törzse
     private List<Statement> body;
 
-    //Konstruktor a for ciklus felépítéséhez.
+
     public ForStatement(Statement init, Expression condition, Statement step, List<Statement> body) {
         this.init = init;
         this.condition = condition;
@@ -36,37 +36,30 @@ public class ForStatement implements Statement {
         this.body = body;
     }
 
-    /* A for ciklus futásidejű végrehajtása.
-     * @param env: Az aktuális környezet (memória).
-     */
+
     @Override
     public void execute(Environment env) {
-        // 1. LÉPÉS: Inicializálás
+        // 1. Inicializálás
         init.execute(env);
 
-        // A Java saját while(true) ciklusát használja
-        // a Mini nyelv ciklusának szimulálására
         while (true) {
-            // 2. LÉPÉS: Feltétel ellenőrzése
+            // 2. Feltétel ellenőrzése
             Object result = condition.evaluate(env);
 
-            // Szigorú típusellenőrzés:
             if (!(result instanceof Double)) {
                 throw new RuntimeException("A for ciklus feltételének számnak kell lennie!");
             }
 
-            // Ha a feltétel eredménye 0.0 - hamis,
-            // azonnal megszakítja a ciklust és kilép.
             if ((Double) result == 0.0) {
                 break;
             }
 
-            // 3. LÉPÉS: A ciklus törzsének (magjának)
+            // 3. A ciklus törzse (magja)
             for (Statement stmt : body) {
                 stmt.execute(env);
             }
 
-            // 4. LÉPÉS: Léptetés
+            // 4. Léptetés
             step.execute(env);
         }
     }

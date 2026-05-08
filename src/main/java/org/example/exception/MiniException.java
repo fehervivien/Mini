@@ -9,9 +9,6 @@ package org.example.exception;
  */
 
 
-/* Konstruktor (példányosítja a nyelvspecifikus kivételt).
- * @param message: A felhasználónak szánt, olvasható hibaüzenet
- */
 public class MiniException extends RuntimeException {
     public MiniException(String message) {
         super(message);

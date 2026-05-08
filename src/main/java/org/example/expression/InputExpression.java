@@ -15,39 +15,23 @@ import java.util.Scanner;
  */
 public class InputExpression implements Expression {
 
-    /*
-     * Végrehajtja a beolvasást a konzolról,
-     * és visszaadja a beolvasott adatot a nyelv
-     * számára megfelelő (Double vagy String) formátumban.
-     * @param env: Az aktuális környezet (itt nem használjuk,
-     * mert a beolvasás globális).
-     * @return: A beírt adat
-     */
     @Override
     public Object evaluate(Environment env) {
-        // Létrehozunk egy Scannert a standard
-        // bemenet (billentyűzet) figyelésére
-        Scanner scanner = new Scanner(System.in);
 
-        // Beolvas egy teljes sort,
-        // amíg a felhasználó Entert nem nyom
+        Scanner scanner = new Scanner(System.in);
         String inputStr = scanner.nextLine();
 
-        // AUTOMATIKUS TÍPUSFELISMERÉS (Type Inference)
+        // Automatikus típusfelismerés
         try {
-            // 1. Próba: Megpróbálja a beírt szöveget
+            // 1. Megpróbálja a beírt szöveget
             // lebegőpontos számmá (Double) alakítani.
-            // Ha a felhasználó azt írta be, hogy "5" vagy "3.14",
-            // ez sikeres lesz.
             return Double.parseDouble(inputStr);
 
         } catch (NumberFormatException e) {
 
-            // 2. Próba: Ha a konverzió elbukik
-            // (NumberFormatException-t dob a Java,
-            // mert nem számot írtak be),
+            // 2. Ha a konverzió elbukik
             // akkor a rendszer elkapja a hibát,
-            // és visszatér az eredeti, nyers szöveggel (String).
+            // és visszatér az eredeti, nyers szöveggel.
             return inputStr;
         }
     }

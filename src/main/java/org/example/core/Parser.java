@@ -25,22 +25,14 @@ public class Parser {
     private List<String> tokens;
     private int currentTokenIndex;
 
-    // Jelzi, ha a sorokon átívelő komment még tart
     private boolean inMultiLineComment = false;
 
-    /* Lexikális elemző a kifejezésekhez.
-     * Egy matematikai vagy logikai sort darabol fel
-     * alapegységekre (tokenekre):
-     * ["x", "+", "5", "==", "10"].
-     */
+
     private List<String> tokenizeExpression(String exprStr) {
         List<String> tokens = new ArrayList<>();
         StringBuilder currentToken = new StringBuilder();
         boolean inString = false;
 
-
-        // Reguláris kifejezés az operátorok
-        // és speciális elválasztók felismerésére
         String ops = "==|!=|<=|>=|&&|\\|\\||[<>+\\-*/()=,]";
         Pattern opPattern = Pattern.compile("^(" + ops + ")");
 
@@ -91,11 +83,6 @@ public class Parser {
         return tokens;
     }
 
-    /* A kifejezés elemzés belépési pontja.
-     * Innentől kezdve a függvények hívási lánca
-     * határozza meg a műveleti sorrendet (Precedencia).
-     * A leggyengébb operátortól haladunk a legerősebb felé.
-     */
     private Expression parseExpression(String exprStr) {
         this.tokens = tokenizeExpression(exprStr);
         this.currentTokenIndex = 0;
@@ -195,12 +182,7 @@ public class Parser {
         return left;
     }
 
-    /**
-     * A legmagasabb prioritású elemek feldolgozása.
-     * Itt dől el, hogy egy token mi:
-     * szám, szöveg, zárójelbe tett kifejezés,
-     * vagy függvényhívás.
-     */
+
     private Expression parsePrimary() {
         if (currentTokenIndex >= tokens.size()) {
             throw new RuntimeException("Váratlan vége a kifejezésnek");
@@ -209,7 +191,6 @@ public class Parser {
         currentTokenIndex++;
 
         // Zárójelezett kifejezés
-        // (a zárójel felülbírálja a műveleti sorrendet)
         if (token.equals("(")) {
             Expression expr = parseComparison();
             if (currentTokenIndex >= tokens.size() || !tokens.get(currentTokenIndex).equals(")")) {
@@ -231,23 +212,17 @@ public class Parser {
         } else if (isNumeric(token)) {
             return new NumberExpression(Double.parseDouble(token));
 
-          // Egyéb esetben: Változónév VAGY Függvényhívás
         } else {
             String name = token;
 
-            // Ha a nevet egy nyitó zárójel '(' követi,
-            // akkor ez egy függvényhívás!
             if (currentTokenIndex < tokens.size() && tokens.get(currentTokenIndex).equals("(")) {
                 currentTokenIndex++;
 
                 List<Expression> args = new ArrayList<>();
                 if (!tokens.get(currentTokenIndex).equals(")")) {
-                    // Első argumentum kiértékelése
                     args.add(parseLogicalOr());
 
-                    // Ha vessző jön, akkor több argumentum is van
                     while (currentTokenIndex < tokens.size() && tokens.get(currentTokenIndex).equals(",")) {
-                        // ',' átlépése
                         currentTokenIndex++;
                         args.add(parseLogicalOr());
                     }
@@ -256,12 +231,10 @@ public class Parser {
                 if (currentTokenIndex >= tokens.size() || !tokens.get(currentTokenIndex).equals(")")) {
                     throw new RuntimeException("Hianyzik a ')' a fuggveny utan: " + name);
                 }
-                currentTokenIndex++; // ')' átlépése
+                currentTokenIndex++;
                 return new CallExpression(name, args);
             }
 
-            // Ha nem volt utána zárójel,
-            // akkor ez csak egy sima változó olvasása
             return new VariableExpression(name);
         }
     }
@@ -277,21 +250,14 @@ public class Parser {
     private List<String> lines;
     private int currentLineIndex;
 
-    /* A szintaktikai elemzés fő belépési pontja.
-     * A forráskódot sorokra bontja, és elindítja
-     * a blokk-szintű feldolgozást.
-     */
+
     public List<Statement> parse(String sourceCode) {
         this.lines = Arrays.asList(sourceCode.split("\n"));
         this.currentLineIndex = 0;
         return parseStatementBlock();
     }
 
-    /* Egy kódrészlet (blokk) elemzése, amíg el nem ér
-     * egy lezáró szót (terminátort), pl. "}" vagy "} else {".
-     * Ezzel oldja meg az egymásba ágyazott blokkok
-     * (scope-ok) felépítését.
-     */
+
     private List<Statement> parseStatementBlock(String... terminators) {
         List<Statement> statements = new ArrayList<>();
 
@@ -305,7 +271,6 @@ public class Parser {
             }
 
             // Terminátor (blokk lezárás) figyelése
-            // (pl. "}" vagy "} else {")
             if (terminators != null && terminators.length > 0) {
                 for (String terminator : terminators) {
                     if (line.equals(terminator)) {
@@ -322,12 +287,10 @@ public class Parser {
             }
 
             // Sorszám elmentése a hibakezeléshez
-            // (Decorator minta)
             int actualLineNumber = currentLineIndex;
             Statement stmt = null;
 
-            // Kulcsszavak alapján eldönti,
-            // hogy milyen parancsról van szó
+            // Kulcsszavak
             if (line.startsWith("if")) {
                 stmt = parseIfStatement(line);
             }
@@ -347,13 +310,9 @@ public class Parser {
                 stmt = parseSimpleStatement(line);
             }
 
-            // Becsomagolja az eredeti parancsot
-            // a "nyomkövetőbe" a pontos hibaüzenetekért
             statements.add(new TrackedStatement(stmt, actualLineNumber));
         }
 
-        // Ha a fájl véget ért, de nem találta meg
-        // a várt lezáró jelet (pl. hiányzó '}')
         if (terminators != null && terminators.length > 0) {
             throw new RuntimeException("Szintaktikai hiba: Hiányzó lezárás: " + String.join(" vagy ", terminators));
         }
@@ -361,11 +320,9 @@ public class Parser {
         return statements;
     }
 
-    // IF elágazás elemzése (Zárójelek nélküli,
-    // modern szintaxis támogatása)
+    // IF elágazás elemzése
     private Statement parseIfStatement(String line) {
-        // Regex: if kulcsszó, utána
-        // a feltétel, majd a blokknyitó {
+
         Pattern ifPattern = Pattern.compile("^if\\s+(.*?)\\s*\\{$");
         Matcher matcher = ifPattern.matcher(line);
 
@@ -376,12 +333,9 @@ public class Parser {
         String conditionString = matcher.group(1);
         Expression condition = parseExpression(conditionString);
 
-        // A 'then' ág beolvasása, amíg el nem éri
-        // a sima zárást "}" vagy az "} else {" ágat
         List<Statement> thenBlock = parseStatementBlock("}", "} else {");
         List<Statement> elseBlock = null;
 
-        // Az else ág logikájának ellenőrzése
         if (currentLineIndex < lines.size()) {
             String stoppingLine = lines.get(currentLineIndex).trim();
             if (stoppingLine.contains("#")) stoppingLine = stoppingLine.substring(0, stoppingLine.indexOf("#")).trim();
@@ -428,9 +382,7 @@ public class Parser {
         return new WhileStatement(condition, body);
     }
 
-    /* FOR ciklus elemzése
-     * Várt formátum: for inicilizálás; feltétel; léptetés {
-     */
+    // FOR ciklus elemzése
     private Statement parseForStatement(String line) {
         Pattern forPattern = Pattern.compile("^for\\s+(.*?)\\s*\\{$");
         Matcher matcher = forPattern.matcher(line);
@@ -461,12 +413,9 @@ public class Parser {
         return new ForStatement(initStmt, conditionExpr, stepStmt, body);
     }
 
-    /* Egyszerű, egy soros parancsok
-     * (print, return, változó értékadás) felismerése.
-     * Támogatja az implicit "var" elhagyást is.
-     */
+
     private Statement parseSimpleStatement(String line) {
-        line = line.trim(); // Biztonság kedvéért a széleket levágjuk
+        line = line.trim();
 
         // 1. Képernyőre írás (print)
         if (line.startsWith("print")) {
@@ -493,13 +442,11 @@ public class Parser {
         String[] parts = line.split("\\s+");
 
         if (parts.length >= 3) {
-            // Klasszikus, java-s megközelítés: "var x = 10"
             if (parts[0].equals("var") && parts[2].equals("=")) {
                 String varName = parts[1];
                 String exprStr = String.join(" ", Arrays.copyOfRange(parts, 3, parts.length));
                 return new VarAssignStatement(varName, parseExpression(exprStr));
             }
-            // Modern, letisztult megközelítés: "x = 10"
             else if (parts[1].equals("=")) {
                 String varName = parts[0];
                 String exprStr = String.join(" ", Arrays.copyOfRange(parts, 2, parts.length));
@@ -510,9 +457,7 @@ public class Parser {
         throw new RuntimeException("Szintaktikai hiba: Ismeretlen parancs '" + line + "'");
     }
 
-    /* Saját függvény definiálásának elemzése
-     * (pl. func nev(arg1, arg2) { ... })
-    */
+    // Saját függvény definiálásának elemzése
     private Statement parseFunctionStatement(String line) {
         java.util.regex.Matcher m = Pattern.compile("^func\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\((.*)\\)\\s*\\{$").matcher(line);
         if (!m.matches()) throw new RuntimeException("Hibas 'func' szintaxis: " + line);
@@ -533,7 +478,6 @@ public class Parser {
 
     // Switch case függvény
     private Statement parseSwitchStatement(String line) {
-        // 1. A 'switch' fejléc elemzése: switch kifejezés {
         Pattern switchPattern = Pattern.compile("^switch\\s+(.*?)\\s*\\{$");
         Matcher matcher = switchPattern.matcher(line);
 
@@ -544,22 +488,18 @@ public class Parser {
         String conditionString = matcher.group(1);
         Expression condition = parseExpression(conditionString);
 
-        // 2. Az ágak gyűjtése
         java.util.Map<Expression, Statement> cases = new java.util.LinkedHashMap<>();
         Statement defaultBranch = null;
 
-        // Addig olvassa a sorokat, amíg el nem éri a switch végét jelző '}' jelet
         while (currentLineIndex < lines.size()) {
             String caseLine = lines.get(currentLineIndex).trim();
 
-            // Ha elérte a switch lezárását
             if (caseLine.equals("}")) {
                 currentLineIndex++;
                 break;
             }
 
             if (caseLine.startsWith("case ")) {
-                // Case ág: case érték {
                 currentLineIndex++;
                 Pattern casePattern = Pattern.compile("^case\\s+(.*?)\\s*\\{$");
                 Matcher caseMatcher = casePattern.matcher(caseLine);
@@ -567,7 +507,6 @@ public class Parser {
                 if (!caseMatcher.matches()) throw new RuntimeException("Hibás 'case' szintaxis: " + caseLine);
 
                 Expression caseValue = parseExpression(caseMatcher.group(1));
-                // Beolvassa a hozzá tartozó blokkot a lezáró '}' jelig
                 List<Statement> caseBody = parseStatementBlock("}");
                 cases.put(caseValue, new BlockStatement(caseBody));
                 currentLineIndex++;
@@ -579,7 +518,7 @@ public class Parser {
                 currentLineIndex++;
             }
             else if (caseLine.isEmpty()) {
-                currentLineIndex++; // Üres sorok átugrása
+                currentLineIndex++;
             }
             else {
                 throw new RuntimeException("Váratlan sor a switch blokkban: " + caseLine);

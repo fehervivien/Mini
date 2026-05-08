@@ -15,8 +15,6 @@ import org.example.exception.BreakException;
 * szerkezetek (mint a SwitchStatement) fognak kezelni.*/
 
 public class BreakStatement implements Statement {
-    /*Az execute metódusa nem végez számításokat,
-     hanem egy egyedi BreakException kivételt dob.*/
     @Override
     public void execute(Environment env) {
         throw new BreakException();

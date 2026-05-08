@@ -15,24 +15,11 @@ public class ReturnException extends RuntimeException {
     // A függvény által visszaadott érték
     private Object value;
 
-    /*
-     * Konstruktor, amely beleteszi a visszatérési
-     * értéket a kivételbe.
-     * @param value: A kifejezés kiértékelt eredménye
-     */
+
     public ReturnException(Object value) {
         this.value = value;
     }
 
-    /*
-     * A beletett érték lekérdezése.
-     * Amikor a CallExpression elkapja ezt a
-     * kivételt a try-catch blokkjában,
-     * ezzel a metódussal fogja megkapni
-     * az eredményt, hogy a program
-     * folytathassa a számolást.
-     * @return: A függvényből visszatérő adat.
-     */
     public Object getValue() {
         return value;
     }

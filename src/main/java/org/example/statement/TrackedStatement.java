@@ -13,46 +13,29 @@ import org.example.exception.ReturnException;
  */
 public class TrackedStatement implements Statement {
 
-    /* A becsomagolt, eredeti utasítás
-      (pl. egy PrintStatement vagy IfStatement) */
+    // A becsomagolt, eredeti utasítás
     private Statement originalStatement;
-
-    /* A sor száma, ahol ez az utasítás
-       az eredeti .mini fájlban szerepelt */
     private int lineNumber;
 
-    /* Konstruktor, amely becsomagolja az utasítást
-       a metaadattal. */
+
+
     public TrackedStatement(Statement originalStatement, int lineNumber) {
         this.originalStatement = originalStatement;
         this.lineNumber = lineNumber;
     }
 
-    /* A végrehajtás elindítása a hibakezelő
-       "védőháló" alatt.
-       @param env: Az aktuális futási környezet. */
+
     @Override
     public void execute(Environment env) {
         try {
-            /* 1. LÉPÉS: Delegálás
-               Megpróbálja futtatni az eredeti parancsot.
-               A burkoló nem avatkozik be a működésbe,
-               csak figyeli, hogy történik-e közben hiba. */
+            // 1. Delegálás
             originalStatement.execute(env);
 
         } catch (ReturnException e) {
-            /* 2. LÉPÉS: Vezérlési kivételek továbbengedése (Bypass)
-               A ReturnException nem egy igazi hiba,
-               hanem arra szolgál hogy a return értékét
-               visszaküldi a függvény hívójának.  */
+            // 2. Vezérlési kivételek továbbengedése (Bypass)
             throw e;
         } catch (MiniException e) {
-            /* 3. LÉPÉS: Valódi hibák elkapása és kontextualizálása
-               (másik környezetbe helyezés)
-               Ha a futás során bárhol hiba történt az idekerül.
-               Az osztály elkapja a hibát, ráteszi az eltárolt
-               sorszámot, majd egy új, sorszámozott hibaként
-               dobja tovább a főprogram felé. */
+            // 3. Valódi hibák elkapása és kontextualizálása
             throw new MiniException("Futasi hiba a(z) " + lineNumber + ". sorban -> " + e.getMessage());
         }
     }

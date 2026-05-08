@@ -10,18 +10,6 @@ import org.example.core.Environment;
  * az evaluate() függvénnyel.
  */
 public interface Expression {
-    /*
-     * Kiértékeli az adott kifejezést, és visszatér annak
-     * futásidejű (dinamikus) értékével.
 
-     * @param env: Az aktuális végrehajtási környezet (Environment),
-     * amely tartalmazza a memóriában éppen elérhető lokális
-     * és globális változókat.
-     *
-     * @return: A kifejezés eredménye. Mivel a Mini nyelv
-     * dinamikusan típusos (nincs előre definiálva, hogy
-     * egy változó szám vagy szöveg), a visszatérési érték
-     * egy általános Object.
-     */
     Object evaluate(Environment env);
 }

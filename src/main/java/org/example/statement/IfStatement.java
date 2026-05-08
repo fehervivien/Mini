@@ -14,32 +14,25 @@ import java.util.List;
  */
 public class IfStatement implements Statement {
 
-    // A feltétel, amit ki kell értékelni (pl. x > 5)
+    // A feltétel, amit ki kell értékelni
     private Expression condition;
 
-    /* Az "igaz" (THEN) ág: azon parancsok listája,
-       amik akkor futnak le, ha a feltétel igaz */
     private List<Statement> thenBlock;
-
-    /* A "hamis" (ELSE) ág: opcionális parancslista. */
     private List<Statement> elseBlock;
 
-    // Konstruktor az elágazás felépítéséhez.
     public IfStatement(Expression condition, List<Statement> thenBlock, List<Statement> elseBlock) {
         this.condition = condition;
         this.thenBlock = thenBlock;
         this.elseBlock = elseBlock;
     }
 
-    /* Az elágazás futásidejű végrehajtása.
-     * @param env: Az aktuális futási környezet (memória).
-     */
+
     @Override
     public void execute(Environment env) {
-        // 1. LÉPÉS: Kiértékeli a feltételt
+        // 1. Kiértékeli a feltételt
         Object conditionResult = condition.evaluate(env);
 
-        // 2. LÉPÉS: Szigorú típusellenőrzés a vezérlésben
+        // 2. Típusellenőrzés a vezérlésben
         if (!(conditionResult instanceof Double)) {
             throw new RuntimeException(
                     "Típushiba: Az 'if' feltételnek számnak kell lennie (1.0 = true, 0.0 = false). " +
@@ -49,7 +42,7 @@ public class IfStatement implements Statement {
         // Biztonságos kasztolás
         double conditionValue = (Double) conditionResult;
 
-        // 3. LÉPÉS: Ágaztatás (Branching)
+        // 3. Ágaztatás (Branching)
         if (conditionValue != 0.0) {
             for (Statement statement : thenBlock) {
                 statement.execute(env);

@@ -15,30 +15,26 @@ import java.util.List;
  */
 public class WhileStatement implements Statement {
 
-    // A ciklus futásának feltétele (pl. x < 10)
+    // A ciklus futásának feltétele
     private Expression condition;
 
     // A ciklus törzse
     private List<Statement> body;
 
-    /* Konstruktor, amely felépíti a ciklus
-       AST csomópontját. */
+
     public WhileStatement(Expression condition, List<Statement> body) {
         this.condition = condition;
         this.body = body;
     }
 
-    /* A ciklus futásidejű végrehajtása.
-       @param env: Az aktuális futási környezet
-       (memória).
-     */
+
     @Override
     public void execute(Environment env) {
         while (true) {
-            /* 1. LÉPÉS: A feltétel újraértékelése */
+            // 1. A feltétel újraértékelése
             Object result = condition.evaluate(env);
 
-            /* 2. LÉPÉS: Szigorú típusellenőrzés */
+            // 2. Típusellenőrzés
             if (!(result instanceof Double)) {
                 throw new MiniException(
                         "Tipushiba: A 'while' feltetelnek szamnak (logikai erteknek) kell lennie. " +
@@ -47,20 +43,17 @@ public class WhileStatement implements Statement {
 
             double val = (Double) result;
 
-            /* 3. LÉPÉS: Kilépési feltétel (0.0 = hamis) */
+            // 3. Kilépési feltétel (0.0 = hamis)
             if (val == 0.0) {
                 break;
             }
 
-            /* 4. LÉPÉS: A ciklusmag végrehajtása hibakezeléssel */
+            // 4. A ciklusmag végrehajtása hibakezeléssel
             try {
                 for (Statement stmt : body) {
                     stmt.execute(env);
                 }
             } catch (org.example.exception.BreakException e) {
-            /* Ha a ciklusmag futása közben BreakException érkezik,
-               megszakítjuk a Java 'while(true)' ciklust is.
-               Ezzel a Mini-ciklus szabályosan véget ér. */
                 break;
             }
         }

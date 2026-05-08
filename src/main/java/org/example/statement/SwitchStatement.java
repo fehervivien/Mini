@@ -28,7 +28,7 @@ public class SwitchStatement implements Statement {
 
     @Override
     public void execute(Environment env) {
-        // 1. Kiértékeli a fő kifejezést (pl. x értéke legyen 2)
+        // 1. Kiértékeli a fő kifejezést
         Object valueToMatch = condition.evaluate(env);
         boolean matched = false;
 

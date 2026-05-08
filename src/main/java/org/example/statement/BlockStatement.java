@@ -25,7 +25,6 @@ public class BlockStatement implements Statement {
 
     @Override
     public void execute(Environment env) {
-        // A blokk végrehajtása: sorban lefuttatja a benne lévő utasításokat
         for (Statement statement : statements) {
             statement.execute(env);
         }
