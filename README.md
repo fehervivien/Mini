@@ -30,5 +30,8 @@ mvn clean install
 Ez a parancs létrehozza a target/ mappát, amelyben 
 megtalálható a futtatható Mini-1.0-SNAPSHOT.jar állomány.
 
+Futtatás:
+java -jar target/Mini-1.0-SNAPSHOT.jar teszt.mini
+
 • Használata:
-Példa programok a teszt.mini fájlban találhatóak.
+Példa programok a teszt.mini fájlban találhatóak, illetve oda írhatóak az utasítások.
